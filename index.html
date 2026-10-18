@@ -188,7 +188,7 @@
       img.onerror = () => {
         card.className = "error";
         card.textContent =
-          `Photo ${i} could not load. Check image${i}.jpg`;
+          card.textContent = `Photo ${i} could not load: ${img.src}`;
       };
 
       card.appendChild(img);
