@@ -175,7 +175,7 @@
       const img = document.createElement("img");
 
       // Images are in the SAME directory as index.html
-      img.src = `./image${i}.jpg`;
+      img.src = `./image${i}.JPG`;
       img.alt = `Photo ${i}`;
       img.className = "photo";
       img.loading = "eager";
@@ -188,7 +188,7 @@
       img.onerror = () => {
         card.className = "error";
         card.textContent =
-          `Photo ${i} could not load. Check image${i}.jpg`;
+          `Photo ${i} could not load. Check image${i}.JPG`;
       };
 
       card.appendChild(img);
