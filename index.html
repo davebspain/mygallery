@@ -1,11 +1,9 @@
 
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>My Photo Gallery</title>
 
   <style>
@@ -21,15 +19,14 @@
     }
 
     header {
-      text-align: center;
-      padding: 35px 20px;
       background: #24292f;
       color: white;
+      text-align: center;
+      padding: 35px 20px;
     }
 
     header h1 {
       margin: 0 0 10px;
-      font-size: 2.2rem;
     }
 
     header p {
@@ -39,27 +36,39 @@
 
     .gallery {
       max-width: 1400px;
-      margin: 0 auto;
-      padding: 25px;
+      margin: auto;
+      padding: 24px;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 18px;
     }
 
-    .gallery img {
+    .photo {
       width: 100%;
       height: 240px;
       object-fit: cover;
       display: block;
       border-radius: 10px;
       cursor: pointer;
-      background: #ddd;
-      transition: transform 0.2s, box-shadow 0.2s;
+      background: #e0e0e0;
     }
 
-    .gallery img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 18px #0003;
+    .photo:hover {
+      opacity: 0.88;
+    }
+
+    .error {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+      color: #b42318;
+      overflow-wrap: anywhere;
     }
 
     .lightbox {
@@ -68,9 +77,9 @@
       inset: 0;
       z-index: 1000;
       background: rgba(0, 0, 0, 0.92);
-      justify-content: center;
       align-items: center;
-      padding: 50px;
+      justify-content: center;
+      padding: 40px;
     }
 
     .lightbox.active {
@@ -80,27 +89,23 @@
     .lightbox img {
       max-width: 100%;
       max-height: 85vh;
-      width: auto;
-      height: auto;
       object-fit: contain;
-      background: transparent;
-      cursor: default;
     }
 
     .close {
       position: absolute;
       top: 12px;
-      right: 25px;
-      font-size: 42px;
+      right: 24px;
       color: white;
-      background: none;
-      border: none;
+      font-size: 42px;
+      border: 0;
+      background: transparent;
       cursor: pointer;
     }
 
     footer {
-      text-align: center;
       padding: 20px;
+      text-align: center;
       color: #666;
     }
 
@@ -109,7 +114,8 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .gallery img {
+      .photo,
+      .error {
         height: 200px;
       }
     }
@@ -121,12 +127,9 @@
         padding: 12px;
       }
 
-      .gallery img {
+      .photo,
+      .error {
         height: 160px;
-      }
-
-      header h1 {
-        font-size: 1.8rem;
       }
 
       .lightbox {
@@ -140,7 +143,7 @@
 
   <header>
     <h1>My Photo Gallery</h1>
-    <p>Explore my collection of 20 photos</p>
+    <p>My collection of 20 photos</p>
   </header>
 
   <main class="gallery" id="gallery"></main>
@@ -159,38 +162,37 @@
       onclick="closeImage(event)"
     >&times;</button>
 
-    <img id="largeImage" src="" alt="Enlarged gallery photo">
+    <img id="largeImage" alt="Enlarged photo">
   </div>
 
-  <footer>
-    &copy; 2026 My Photo Gallery
-  </footer>
+  <footer>My Photo Gallery</footer>
 
   <script>
     const gallery = document.getElementById("gallery");
 
     for (let i = 1; i <= 20; i++) {
+      const card = document.createElement("div");
       const img = document.createElement("img");
 
-      img.src = `image${i}.jpg`;
-      img.alt = `Gallery photo ${i}`;
-      img.loading = "lazy";
+      // Images are in the SAME directory as index.html
+      img.src = `./image${i}.jpg`;
+      img.alt = `Photo ${i}`;
+      img.className = "photo";
+      img.loading = "eager";
 
       img.addEventListener("click", () => {
-        const lightbox = document.getElementById("lightbox");
-        const largeImage = document.getElementById("largeImage");
-
-        largeImage.src = img.src;
-        largeImage.alt = img.alt;
-
-        lightbox.classList.add("active");
+        document.getElementById("largeImage").src = img.src;
+        document.getElementById("lightbox").classList.add("active");
       });
 
       img.onerror = () => {
-        console.error("Could not load: " + img.src);
+        card.className = "error";
+        card.textContent =
+          `Photo ${i} could not load. Check image${i}.jpg`;
       };
 
-      gallery.appendChild(img);
+      card.appendChild(img);
+      gallery.appendChild(card);
     }
 
     function closeImage(event) {
@@ -203,7 +205,7 @@
       }
     }
 
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", event => {
       if (event.key === "Escape") {
         document.getElementById("lightbox")
           .classList.remove("active");
